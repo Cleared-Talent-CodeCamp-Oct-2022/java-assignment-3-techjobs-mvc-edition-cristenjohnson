@@ -33,19 +33,22 @@ public class SearchController {
     //this will be a post mapping
     //if statement and it will store an arraylist
 
-    @PostMapping(value = "jobs")
-    public String listJobsByColumnAndValue(Model model, @RequestParam String column, @RequestParam(required = false) String value) {
+
+    @PostMapping(value = "results")
+    public String displaySearchResults(Model model, @RequestParam String searchType,
+                                       @RequestParam(required = false) String searchTerm) {
         ArrayList<Job> jobs;
-        if (column.equals("all")){
+        if (searchTerm.equals("all") || searchTerm.equals("")) {
             jobs = JobData.findAll();
-            model.addAttribute("title", "All Jobs");
+         //   model.addAttribute("title", "All Jobs");
         } else {
-            jobs = JobData.findByColumnAndValue(column, value);
-            model.addAttribute("title", "Jobs with " + columnChoices.get(column) + ": " + value);
+            jobs = JobData.findByColumnAndValue(searchType, searchTerm);
+            //model.addAttribute("title", "Jobs with " + columnChoices.get(column) + ": " + value);
         }
         model.addAttribute("jobs", jobs);
+        model.addAttribute("columns", columnChoices);
 
-        return "list-jobs";
+        return "search";
     }
 
 }
